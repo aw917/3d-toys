@@ -1,0 +1,20 @@
+.App {
+  text-align: center;
+}
+
+body {
+  background-color: lightcyan;
+}
+
+.canvas-container {
+  transform: translateX(-50%);
+  margin-left:50%;
+  width: 90vw;
+  height: 65vh;
+  background-color: black;
+  display: flexbox;
+  border-radius: 2.5%;
+  border-color: hotpink;
+  border-width: 5px;
+  border-style: solid;
+}
