@@ -18,7 +18,8 @@
     "react-three-fiber": "^5.3.17",
     "three": "^0.124.0",
     "three-orbitcontrols": "^2.110.3",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "nice-color-palettes": "3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

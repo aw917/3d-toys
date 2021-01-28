@@ -1,72 +1,91 @@
-import { WebGLRenderTarget, Object3D } from "three"
-import React, { useRef, useMemo, useLayoutEffect } from "react"
-import { useLoader, useThree, useFrame } from "react-three-fiber"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
-import lerp from "lerp"
-import BackfaceMaterial from "./BackfaceMaterial"
-import RefractionMaterial from "./RefractionMaterial"
-// import { useBlock } from "../blocks"
-// import state from "../store"
+// Code pulled from https://codesandbox.io/embed/r3f-instanced-colors-8fo01 
+import * as THREE from 'three'
+import ReactDOM from 'react-dom'
+import React, { useRef, useMemo, useState, useEffect } from 'react'
+import { Canvas, useFrame } from 'react-three-fiber'
+import niceColors from 'nice-color-palettes'
+import Effects from './Effects'
+// import './styles.css'
 
-const dummy = new Object3D()
+const tempObject = new THREE.Object3D()
+const tempColor = new THREE.Color()
+const colors = new Array(1000).fill().map(() => niceColors[17][Math.floor(Math.random() * 5)])
 
-const Diamond = () => {
-    const { nodes } = useLoader(GLTFLoader, "/diamond.glb")
-    useLayoutEffect(() => nodes.pCone1_lambert1_0.geometry.center(), [])
-  
-    const { size, gl, scene, camera, clock } = useThree()
-    // const { contentMaxWidth, sectionHeight, mobile } = useBlock()
-    const model = useRef()
-    const ratio = gl.getPixelRatio()
-  
-    const [envFbo, backfaceFbo, backfaceMaterial, refractionMaterial] = useMemo(() => {
-      const envFbo = new WebGLRenderTarget(size.width * ratio, size.height * ratio)
-      const backfaceFbo = new WebGLRenderTarget(size.width * ratio, size.height * ratio)
-      const backfaceMaterial = new BackfaceMaterial()
-      const refractionMaterial = new RefractionMaterial({
-        envMap: envFbo.texture,
-        backfaceMap: backfaceFbo.texture,
-        resolution: [size.width * ratio, size.height * ratio]
-      })
-      return [envFbo, backfaceFbo, backfaceMaterial, refractionMaterial]
-    }, [size, ratio])
-  
-    useFrame(() => {
-      state.diamonds.forEach((data, i) => {
-        const t = clock.getElapsedTime() / 2
-        const { x, offset, scale, factor } = data
-        const s = (contentMaxWidth / 35) * scale
-        data.pos.set(mobile ? 0 : x, lerp(data.pos.y, -sectionHeight * offset * factor + (state.top.current / state.zoom) * factor, 0.1), 0)
-        dummy.position.copy(data.pos)
-        if (i === state.diamonds.length - 1) dummy.rotation.set(0, t, 0)
-        else dummy.rotation.set(t, t, t)
-        dummy.scale.set(s, s, s)
-        dummy.updateMatrix()
-        model.current.setMatrixAt(i, dummy.matrix)
-        model.current.instanceMatrix.needsUpdate = true
-      })
-  
-      gl.autoClear = false
-      camera.layers.set(0)
-      gl.setRenderTarget(envFbo)
-      gl.clearColor()
-      gl.render(scene, camera)
-      gl.clearDepth()
-      camera.layers.set(1)
-      model.current.material = backfaceMaterial
-      gl.setRenderTarget(backfaceFbo)
-      gl.clearDepth()
-      gl.render(scene, camera)
-      camera.layers.set(0)
-      gl.setRenderTarget(null)
-      gl.render(scene, camera)
-      gl.clearDepth()
-      camera.layers.set(1)
-      model.current.material = refractionMaterial
-      gl.render(scene, camera)
-    }, 1)
-  
-    return <instancedMesh ref={model} layers={1} args={[nodes.pCone1_lambert1_0.geometry, null, state.diamonds.length]} position={[0, 0, 50]} />
+function Boxes() {
+  const [hovered, set] = useState("");
+  const [clicked, setClicked] = useState("");
+  const colorArray = useMemo(() => Float32Array.from(new Array(1000).fill().flatMap((_, i) => tempColor.set(colors[i]).toArray())), [])
+
+  const ref = useRef(null)
+  const previous = useRef(null)
+  const clickedHold =  useRef(null)
+
+  useEffect(() => {
+    void (previous.current = hovered)
+    void (clickedHold.current = clicked)
+  }, [hovered, clicked])
+
+  useFrame(state => {
+    const time = state.clock.getElapsedTime()
+    ref.current.rotation.x = Math.sin(time / 4)
+    ref.current.rotation.y = Math.sin(time / 2)
+    let i = 0
+    for (let x = 0; x < 10; x++)
+      for (let y = 0; y < 10; y++)
+        for (let z = 0; z < 10; z++) {
+          const id = i++
+          tempObject.position.set(5 - x, 5 - y, 5 - z)
+          tempObject.rotation.y = Math.sin(x / 4 + time) + Math.sin(y / 4 + time) + Math.sin(z / 4 + time)
+          tempObject.rotation.z = tempObject.rotation.y * 2
+          if (hovered !== previous.current) {
+            tempColor.set(id === hovered ? 'white' : colors[id]).toArray(colorArray, id * 3)
+            ref.current.geometry.attributes.color.needsUpdate = true
+          }
+          // if (clicked !== clickedHold.current) {
+          //   tempColor.set(id === clicked ? 'black' : colors[id]).toArray(colorArray, id * 3)
+          //   ref.current.geometry.attributes.color.needsUpdate = true
+          // }
+          const scale = id === hovered ? 2 : 1
+          tempObject.scale.set(scale, scale, scale)
+          tempObject.updateMatrix()
+          ref.current.setMatrixAt(id, tempObject.matrix)
+        }
+    ref.current.instanceMatrix.needsUpdate = true
+  })
+
+  const handleClick = (e) => {
+    if (clicked !== clickedHold.current) {
+      tempColor.set(e === clicked ? 'black' : colors[e]).toArray(colorArray, e * 3)
+      ref.current.geometry.attributes.color.needsUpdate = true
+    } else {
+      setClicked(null);
+    }
+  }
+
+  return (
+    <instancedMesh ref={ref} args={[null, null, 1000]} onPointerMove={e => set(e.instanceId)} onPointerOut={e => set(undefined)} onClick={e => handleClick(e.instanceId)}>
+      <boxBufferGeometry attach="geometry" args={[0.7, 0.7, 0.7]}>
+        <instancedBufferAttribute attachObject={['attributes', 'color']} args={[colorArray, 3]} />
+      </boxBufferGeometry>
+      <meshPhongMaterial attach="material" vertexColors={THREE.VertexColors} />
+    </instancedMesh>
+  )
+}
+
+function Diamond() {
+  return (
+    <div className="canvas-container">
+      <Canvas
+        gl={{ antialias: false, alpha: false }}
+        camera={{ position: [0, 0, 17], near: 5, far: 20 }}
+        onCreated={({ gl }) => gl.setClearColor('yellow')}>
+        <ambientLight />
+        <pointLight position={[150, 150, 150]} intensity={0.85} />
+        <Boxes />
+        <Effects />
+      </Canvas>
+    </div>
+  )
 }
 
 export default Diamond;
