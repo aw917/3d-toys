@@ -32,6 +32,83 @@ mongoose.connection.once('open', () => {
 // RESTFUL ROUTES
 // ==============================================
 
+// Index
+app.get('/favorites', (req, res) => {
+    // don't filter the information
+    Favorite.find({}, (err, allFavorites) => {
+        if(!err) {
+            res.send({
+                favorites: allFavorites
+            })
+        } else {
+            res.send(err)
+        }
+    })
+})
+
+// New
+app.get('/favorites/new', (req, res) => {
+    res.render('New');
+})
+
+// Delete
+app.delete('/favorites/:id', (req, res) => {
+    Favorite.findByIdAndDelete(req.params.id, (err, _) => {
+        if(!err) {
+            res.redirect('/favorites')
+        } else {
+            res.send(err)
+        }
+    })
+})
+
+// Update
+app.put('/favorites/:id', (req, res) => {
+    Favorite.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, updatedFavorite) => {
+        if(!err) {
+            res.redirect('/favorites');
+        } else {
+            res.send(err);
+        }
+    })
+})
+
+// Create
+app.post('/favorites', (req, res) => {
+    Favorite.create(req.body, (err, createdFavorite)=> {
+        if (!err) {
+            res.redirect('/favorites')
+        } else {
+            res.send(err);
+        }
+    })
+})
+
+// Edit
+app.get('/favorites/:id/edit', (req, res) => {
+    Favorite.findById(req.params.id, (err, foundFavorite) => {
+        if(!err) {
+            res.render({
+                favorites: foundFavorite
+            })
+        } else {
+            res.send(err)
+        }
+    })
+})
+
+// Show
+app.get('/favorites/:id', (req, res) => {
+    Favorite.findById(req.params.id, (err, foundFavorite) => {
+        if(!err) {
+            res.render({
+                favorites: foundFavorite
+            })
+        } else {
+            res.send(err)
+        }
+    })
+})
 
 // ==============================================
 // CONNECTION

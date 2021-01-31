@@ -7,10 +7,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import ShapeForm from "./Cube_Form";
 
 const style = {
-  height: 500, // we can control scene size by setting container dimensions
-  // width: "85vw",
-  // marginLeft: "50%",
-  // transform: "translateX(-50%)",
+  height: "50vh", // we can control scene size by setting container dimensions
+  width: "85vw",
+  margin: "0 auto",
+  marginTop: "2.5%"
 };
 
 class Cube extends Component {
@@ -51,7 +51,7 @@ class Cube extends Component {
     // set some distance from a cube that is located at z = 0
     this.camera.position.z = 50;
 
-    this.scene.background = new THREE.Color("black");
+    this.scene.background = new THREE.Color("gray");
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(width, height);
@@ -104,14 +104,14 @@ class Cube extends Component {
     this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
   }
 
-  handleWindowResize() {
-    const width = this.el.clientWidth;
-    const height = this.el.clientHeight;
+  // handleWindowResize() {
+  //   const width = this.el.clientWidth;
+  //   const height = this.el.clientHeight;
 
-    this.renderer.setSize(width, height);
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-  }
+  //   this.renderer.setSize(width, height);
+  //   this.camera.aspect = width / height;
+  //   this.camera.updateProjectionMatrix();
+  // }
 
   // generateMultipleCubes() {
   //   let numberOfCubes = this.props.numberOfCubes;
@@ -146,6 +146,18 @@ class Cube extends Component {
   //   }
   // }
 
+//   saveToFavorites (e) {
+//     e.preventDefault();
+//     try {
+//       const response = await fetch('http://localhost:3000/favorites', {
+//         method:'POST',
+//         headers: {
+//           'Content-type' : 'application/json'
+//         },
+//         body: this.state
+//       })
+//     }
+//   }
   render() {
     return <div style={style} ref={(ref) => (this.el = ref)} />;
   }
@@ -194,6 +206,9 @@ class Container extends React.Component {
             wireFrame={this.state.wireFrame}
           />
         </div>
+        <form>
+          <input type="submit" value="save" onClick={e => this.saveToFavorites(e)}/>
+        </form>
       </>
     );
   }

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const favoritesSchema = new mongoose.Schema ({
-    length: { type: Integer, required: true },
-    width: { type: Integer, required: true },
-    height: { type: Integer, required: true },
+    length: { type: Number, required: true },
+    width: { type: Number, required: true },
+    height: { type: Number, required: true },
     color: { type: String, required: true },
-    wireFrame: Boolean
+    wireFrame: { type: Boolean, required: true }
 })
 
 module.exports = mongoose.model('Favorite', favoritesSchema);

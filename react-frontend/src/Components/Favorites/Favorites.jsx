@@ -6,7 +6,7 @@ const Favorites = () => {
     const [favorites, setFavorites] = useState([]);
 
     return (
-        <h2>Test</h2>
+        <h1>Favorites</h1>
     )
 }
 

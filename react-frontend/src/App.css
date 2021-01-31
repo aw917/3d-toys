@@ -132,7 +132,8 @@ body,
 
 .canvas-container {
   transform: translateX(-50%);
-  margin-left:50%;
+  margin-left: 50%;
+  margin-top: 2.5%;
   width: 90vw;
   height: 65vh;
   display: flexbox;
@@ -144,10 +145,39 @@ body,
 
 /*
 =======================================
+Cube
+=======================================
+*/
+
+.Cube {
+  height: 500px;
+}
+
+/*
+=======================================
 Cube Form
 =======================================
 */
+
 .cubeform-inputs {
   width: 85vw;
   margin: 0 auto;
+}
+
+/* .cubeform-inputs form {
+  background-color: white;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: hotpink;
+} */
+
+.cubeform-inputs input {
+  background-color: purple;
+  color: white;
+  font-weight: 700;
+}
+
+.cubeform-inputs {
+  color: purple;
+  font-weight: 700;
 }
