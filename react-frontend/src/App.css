@@ -6,6 +6,110 @@ body {
   background-color: lightcyan;
 }
 
+/*
+=======================================
+Navbar
+=======================================
+*/
+.nav-links {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: space-evenly;
+  background-color: hotpink;
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+}
+
+.nav-links-for-css {
+  text-decoration: none;
+  color: black;
+}
+
+.nav-links-for-css:hover {
+  text-decoration: none;
+  background-color: PURPLE;
+  color: white;
+}
+
+/*
+=======================================
+Home-page
+=======================================
+*/
+.home-container {
+  width: 85vw;
+  margin: 0 auto;
+  background-color: black;
+  padding: 2%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  border-radius: 10px;
+  border-color: hotpink;
+  border-style: solid;
+  margin-top: 3%;
+  cursor: vertical-text;
+}
+
+.home-container h1 {
+  color: yellowgreen;
+  cursor: text;
+}
+
+.home-container p {
+  color: white;
+  cursor: text;
+}
+
+/*
+=======================================
+Visualizations Menu
+=======================================
+*/
+
+.visualizations-container {
+  width: 85vw;
+  margin: 0 auto;
+  background-color: black;
+  padding: 2%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  border-radius: 10px;
+  border-color: hotpink;
+  border-style: solid;
+  margin-top: 3%;
+}
+
+.visualizations-container h1 {
+  color: white;
+  cursor: text;
+}
+
+.visualizations-container div {
+  background-color: yellowgreen;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  padding: 0.5%;
+}
+
+.visualizations-container div:hover {
+  background-color: purple;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  padding: 0.5%;
+}
+
+.visualizations-container a {
+  color: white;
+}
+
+
+/*
+=======================================
+Visualizations formatting
+=======================================
+*/
+
 html,
 body,
 #root {
@@ -36,4 +140,14 @@ body,
   border-color: hotpink;
   border-width: 5px;
   border-style: solid;
+}
+
+/*
+=======================================
+Cube Form
+=======================================
+*/
+.cubeform-inputs {
+  width: 85vw;
+  margin: 0 auto;
 }

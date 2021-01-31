@@ -42,7 +42,7 @@ export default class ShapeForm extends React.Component {
     // const numberOfCubes = this.numberOfCubes;
     const wireFrame = this.state.wireFrame;
     return (
-      <div>
+      <div className="cubeform-inputs">
         <form onSubmit={this.handleSubmit}>
           <fieldset>
             <label htmlFor="shapeLength">

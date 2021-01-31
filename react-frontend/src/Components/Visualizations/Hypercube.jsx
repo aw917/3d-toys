@@ -13,7 +13,7 @@ const colors = new Array(1000).fill().map(() => niceColors[17][Math.floor(Math.r
 
 function Boxes() {
   const [hovered, set] = useState("");
-  const [clicked, setClicked] = useState("");
+  const [clicked, setClicked] = useState([]);
   const colorArray = useMemo(() => Float32Array.from(new Array(1000).fill().flatMap((_, i) => tempColor.set(colors[i]).toArray())), [])
 
   const ref = useRef(null)
@@ -53,17 +53,23 @@ function Boxes() {
     ref.current.instanceMatrix.needsUpdate = true
   })
 
-  const handleClick = (e) => {
-    if (clicked !== clickedHold.current) {
-      tempColor.set(e === clicked ? 'black' : colors[e]).toArray(colorArray, e * 3)
-      ref.current.geometry.attributes.color.needsUpdate = true
-    } else {
+  const handleClick = (className, id) => {
+    let clickedCopy = [];
+    clickedCopy[id] = "clicked";
+    setClicked(clickedCopy);
+    tempColor.set(className === clicked ? 'black' : colors[id]).toArray(colorArray, id * 3)
+    ref.current.geometry.attributes.color.needsUpdate = true
+    if (className === "clicked") {
       setClicked(null);
+    } else {
+      setClicked("clicked");
     }
   }
 
   return (
-    <instancedMesh ref={ref} args={[null, null, 1000]} onPointerMove={e => set(e.instanceId)} onPointerOut={e => set(undefined)} onClick={e => handleClick(e.instanceId)}>
+    <instancedMesh ref={ref} args={[null, null, 1000]} onPointerMove={e => set(e.instanceId)} onPointerOut={e => set(undefined)} onClick={e => {
+        handleClick(e.className, e.instanceId)}
+      }>
       <boxBufferGeometry attach="geometry" args={[0.7, 0.7, 0.7]}>
         <instancedBufferAttribute attachObject={['attributes', 'color']} args={[colorArray, 3]} />
       </boxBufferGeometry>
