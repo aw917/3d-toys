@@ -4,9 +4,6 @@ const Home = () => {
     const visualizations = [
         {name: "cube", img: ""},
         {name: "hypercube", img: ""},
-        // {name: "sphere", img: ""},
-        // {name: "image", img: ""},
-        // {name: "wild", img: ""}
     ]
     return (
         <>

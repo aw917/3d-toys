@@ -146,18 +146,6 @@ class Cube extends Component {
   //   }
   // }
 
-//   saveToFavorites (e) {
-//     e.preventDefault();
-//     try {
-//       const response = await fetch('http://localhost:3000/favorites', {
-//         method:'POST',
-//         headers: {
-//           'Content-type' : 'application/json'
-//         },
-//         body: this.state
-//       })
-//     }
-//   }
   render() {
     return <div style={style} ref={(ref) => (this.el = ref)} />;
   }
@@ -175,11 +163,34 @@ class Container extends React.Component {
     }
     // this.numberOfCubes = 1;
     this.onShapeChange = this.onShapeChange.bind(this);
+    this.saveToFavorites = this.saveToFavorites.bind(this);
   }
 
   onShapeChange(shapeState) {
     this.setState(shapeState);
     // this.numberOfCubes = this.numberOfCubes.current;
+  }
+
+  async saveToFavorites (e) {
+    e.preventDefault();
+    const body = {
+      length: this.state.shapeLength,
+      height: parseInt(this.state.shapeHeight),
+      width: this.state.shapeWidth,
+      color: this.state.shapeColor,
+      wireFrame: this.state.wireFrame
+    }
+    try {
+      const response = await fetch('/favorites', {
+        method:'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+    } catch (err) {
+        console.error(err);
+    }
   }
 
   render() {

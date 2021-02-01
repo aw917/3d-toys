@@ -181,3 +181,35 @@ Cube Form
   color: purple;
   font-weight: 700;
 }
+
+/*
+=======================================
+Favorites
+=======================================
+*/
+
+.favorite-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 95vw;
+  grid-gap: 12px;
+  margin: 0 auto;
+}
+
+.favorites-container {
+  background-color: hotpink;
+  border-radius: 5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: khaki;
+}
+
+.favorites-container ul {
+  text-align: center;
+  margin-left: -15%;
+}
+
+.favorites-container li {
+  list-style: none;
+  color: white;
+}
